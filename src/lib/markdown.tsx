@@ -4,16 +4,21 @@ import { Fragment, type ReactNode } from "react";
 export function renderMarkdown(src: string): ReactNode {
   const out: ReactNode[] = [];
   const lines = src.split("\n");
+  const at = (n: number) => lines[n] ?? "";
   let i = 0;
   let key = 0;
 
+  const isBullet = (s: string) => /^\s*[-*]\s+/.test(s);
+  const isNumbered = (s: string) => /^\s*\d+[.)]\s+/.test(s);
+  const isBlockStart = (s: string) => /^(#{1,3}\s|```)/.test(s) || isBullet(s) || isNumbered(s);
+
   while (i < lines.length) {
-    const line = lines[i];
+    const line = at(i);
 
     if (line.startsWith("```")) {
       const code: string[] = [];
       i++;
-      while (i < lines.length && !lines[i].startsWith("```")) code.push(lines[i++]);
+      while (i < lines.length && !at(i).startsWith("```")) code.push(at(i++));
       i++;
       out.push(
         <pre key={key++}>
@@ -25,15 +30,16 @@ export function renderMarkdown(src: string): ReactNode {
 
     const h = /^(#{1,3})\s+(.*)$/.exec(line);
     if (h) {
-      const Tag = (`h${h[1].length}`) as "h1" | "h2" | "h3";
-      out.push(<Tag key={key++}>{inline(h[2])}</Tag>);
+      const level = (h[1] ?? "#").length;
+      const Tag = (`h${level}`) as "h1" | "h2" | "h3";
+      out.push(<Tag key={key++}>{inline(h[2] ?? "")}</Tag>);
       i++;
       continue;
     }
 
-    if (/^\s*[-*]\s+/.test(line)) {
+    if (isBullet(line)) {
       const items: string[] = [];
-      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) items.push(lines[i++].replace(/^\s*[-*]\s+/, ""));
+      while (i < lines.length && isBullet(at(i))) items.push(at(i++).replace(/^\s*[-*]\s+/, ""));
       out.push(
         <ul key={key++}>
           {items.map((it, j) => (
@@ -44,9 +50,9 @@ export function renderMarkdown(src: string): ReactNode {
       continue;
     }
 
-    if (/^\s*\d+[.)]\s+/.test(line)) {
+    if (isNumbered(line)) {
       const items: string[] = [];
-      while (i < lines.length && /^\s*\d+[.)]\s+/.test(lines[i])) items.push(lines[i++].replace(/^\s*\d+[.)]\s+/, ""));
+      while (i < lines.length && isNumbered(at(i))) items.push(at(i++).replace(/^\s*\d+[.)]\s+/, ""));
       out.push(
         <ol key={key++}>
           {items.map((it, j) => (
@@ -64,8 +70,8 @@ export function renderMarkdown(src: string): ReactNode {
 
     const para: string[] = [line];
     i++;
-    while (i < lines.length && lines[i].trim() !== "" && !/^(#{1,3}\s|```|\s*[-*]\s+|\s*\d+[.)]\s+)/.test(lines[i])) {
-      para.push(lines[i++]);
+    while (i < lines.length && at(i).trim() !== "" && !isBlockStart(at(i))) {
+      para.push(at(i++));
     }
     out.push(<p key={key++}>{inline(para.join(" "))}</p>);
   }

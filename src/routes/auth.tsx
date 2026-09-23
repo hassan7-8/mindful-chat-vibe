@@ -176,6 +176,39 @@ function AuthPage() {
               Google
             </button>
           </form>
+
+          <div className="anim-slideup mt-4 rounded-3xl bg-paper p-5 ring-1 ring-ink/5" style={{ animationDelay: "320ms" }}>
+            {codeOpen ? (
+              <form onSubmit={unlock} className="space-y-3">
+                <label className="block text-xs font-semibold uppercase tracking-wide text-ink/50">
+                  Access code
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="Enter your code"
+                  className="w-full rounded-xl bg-cream px-3 py-2.5 text-sm outline-none ring-1 ring-ink/5 transition focus:ring-2 focus:ring-butter"
+                />
+                <button
+                  type="submit"
+                  disabled={codeBusy}
+                  className="press lift w-full rounded-xl bg-butter py-2.5 text-sm font-semibold text-ink ring-1 ring-ink/5 disabled:opacity-60"
+                >
+                  {codeBusy ? "Checking…" : "Enter chat"}
+                </button>
+              </form>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setCodeOpen(true)}
+                className="press w-full text-sm font-semibold text-ink/60 hover:text-ink"
+              >
+                Have an access code? Continue without an account →
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

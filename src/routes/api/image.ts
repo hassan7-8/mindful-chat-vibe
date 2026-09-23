@@ -60,7 +60,7 @@ export const Route = createFileRoute("/api/image")({
           const text = await res.text().catch(() => "");
           return new Response(
             res.status === 429
-              ? "Image limit hit — try again in a moment."
+              ? "Image generation isn't included in your key's free plan yet — chat and voice still work."
               : `Image error (${res.status}): ${text.slice(0, 200)}`,
             { status: res.status >= 400 && res.status < 600 ? res.status : 502 },
           );

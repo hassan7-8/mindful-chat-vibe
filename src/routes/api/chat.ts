@@ -40,8 +40,11 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { hasGuestCookie } = await import("@/lib/guest.server");
         const user = await verifyUser(request);
-        if (!user) return new Response("Please log in first.", { status: 401 });
+        if (!user && !(await hasGuestCookie(request))) {
+          return new Response("Please log in or enter the access code.", { status: 401 });
+        }
 
         let body: z.infer<typeof BodySchema>;
         try {

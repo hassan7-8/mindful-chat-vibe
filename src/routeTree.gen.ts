@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiGuestRouteImport } from './routes/api/guest'
+import { Route as ApiImageRouteImport } from './routes/api/image'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const ApiGuestRoute = ApiGuestRouteImport.update({
   path: '/api/guest',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiImageRoute = ApiImageRouteImport.update({
+  id: '/api/image',
+  path: '/api/image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/chat': typeof ApiChatRoute
   '/api/guest': typeof ApiGuestRoute
+  '/api/image': typeof ApiImageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/chat': typeof ApiChatRoute
   '/api/guest': typeof ApiGuestRoute
+  '/api/image': typeof ApiImageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/api/chat': typeof ApiChatRoute
   '/api/guest': typeof ApiGuestRoute
+  '/api/image': typeof ApiImageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/api/chat' | '/api/guest'
+  fullPaths: '/' | '/auth' | '/api/chat' | '/api/guest' | '/api/image'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/api/chat' | '/api/guest'
-  id: '__root__' | '/' | '/auth' | '/api/chat' | '/api/guest'
+  to: '/' | '/auth' | '/api/chat' | '/api/guest' | '/api/image'
+  id: '__root__' | '/' | '/auth' | '/api/chat' | '/api/guest' | '/api/image'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiGuestRoute: typeof ApiGuestRoute
+  ApiImageRoute: typeof ApiImageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGuestRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/image': {
+      id: '/api/image'
+      path: '/api/image'
+      fullPath: '/api/image'
+      preLoaderRoute: typeof ApiImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ApiChatRoute: ApiChatRoute,
   ApiGuestRoute: ApiGuestRoute,
+  ApiImageRoute: ApiImageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

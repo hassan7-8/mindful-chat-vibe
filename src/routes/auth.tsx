@@ -28,6 +28,30 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [codeOpen, setCodeOpen] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeBusy, setCodeBusy] = useState(false);
+
+  async function unlock(e: FormEvent) {
+    e.preventDefault();
+    if (codeBusy) return;
+    setCodeBusy(true);
+    try {
+      const res = await fetch("/api/guest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      localStorage.setItem("cm_guest", "1");
+      toast.success("Code accepted — you're in.");
+      navigate({ to: "/chat" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "That code isn't right.");
+    } finally {
+      setCodeBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/chat" });

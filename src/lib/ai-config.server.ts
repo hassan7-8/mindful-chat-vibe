@@ -27,7 +27,7 @@ export const SYSTEM_PROMPT =
 const PROVIDERS = {
   gemini: {
     url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-    model: "gemini-2.0-flash",
+    model: "gemini-3.6-flash",
   },
   groq: {
     url: "https://api.groq.com/openai/v1/chat/completions",

@@ -112,7 +112,9 @@ function ChatPage() {
   async function authHeaders() {
     const { data } = await supabase.auth.getSession();
     const token = data.session?.access_token;
+    const g = localStorage.getItem("cm_guest_token");
     return {
+      ...(g ? { "x-guest-token": g } : {}),
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     } as Record<string, string>;

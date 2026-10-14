@@ -15,6 +15,8 @@ export async function guestToken() {
 }
 
 export async function hasGuestCookie(request: Request) {
+  const header = request.headers.get("x-guest-token");
+  if (header && header === (await token())) return true;
   const cookie = request.headers.get("cookie") ?? "";
   const match = cookie.match(new RegExp(`(?:^|;\\s*)${GUEST_COOKIE}=([^;]+)`));
   if (!match?.[1]) return false;

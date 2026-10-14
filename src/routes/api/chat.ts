@@ -62,19 +62,27 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
-        const upstream = await fetch(cfg.url, {
+        const models = [cfg.model, "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"].filter(
+          (m, i, a) => a.indexOf(m) === i,
+        );
+        let upstream: Response | undefined;
+        for (const model of models) {
+          upstream = await fetch(cfg.url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${cfg.apiKey}`,
           },
           body: JSON.stringify({
-            model: cfg.model,
+            model,
             stream: true,
             messages: [{ role: "system", content: SYSTEM_PROMPT }, ...body.messages],
           }),
           signal: request.signal,
-        });
+          });
+          if (upstream.ok || ![404, 429, 500, 503].includes(upstream.status)) break;
+        }
+        if (!upstream) return new Response("AI unavailable.", { status: 502 });
 
         if (!upstream.ok || !upstream.body) {
           const text = await upstream.text().catch(() => "");

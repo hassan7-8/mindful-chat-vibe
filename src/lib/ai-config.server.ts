@@ -19,6 +19,11 @@ export const GROQ_API_KEY = "PASTE_YOUR_GROQ_KEY_HERE";
 
 // Secret code that unlocks the chat without an account.
 export const GUEST_ACCESS_CODE = "hassan7534@";
+// Secret code that opens the private /admin device dashboard (only you).
+export const ADMIN_CODE = "cm-admin-9F4k27Qx";
+
+// How many devices may use the guest access code.
+export const MAX_GUEST_DEVICES = 2;
 // ▲▲▲ YOUR KEYS ▲▲▲
 
 export const SYSTEM_PROMPT =
@@ -45,6 +50,18 @@ function clean(value: string | undefined) {
 export function getGuestCode() {
   return clean(process.env["GUEST_ACCESS_CODE"]) || GUEST_ACCESS_CODE.trim();
 }
+
+export function getAdminCode() {
+  return clean(process.env["ADMIN_CODE"]) || ADMIN_CODE.trim();
+}
+
+// Models users can pick in the chat. First one is the default.
+export const CHAT_MODELS = {
+  fast: { label: "Swift", model: "gemini-2.5-flash-lite" },
+  smart: { label: "Balanced", model: "gemini-2.5-flash" },
+  pro: { label: "Genius", model: "gemini-3.6-flash" },
+} as const;
+export type ChatModelId = keyof typeof CHAT_MODELS;
 
 export function getGeminiKey() {
   return clean(process.env["GEMINI_API_KEY"]) || clean(GEMINI_API_KEY);

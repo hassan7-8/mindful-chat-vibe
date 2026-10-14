@@ -15,14 +15,14 @@ export const Route = createFileRoute("/api/guest")({
         }
 
         const { getGuestCode } = await import("@/lib/ai-config.server");
-        const { guestCookieHeader } = await import("@/lib/guest.server");
+        const { guestCookieHeader, guestToken } = await import("@/lib/guest.server");
 
         if (code.trim() !== getGuestCode()) {
           await new Promise((r) => setTimeout(r, 400));
           return new Response("That code isn't right.", { status: 401 });
         }
 
-        return new Response(JSON.stringify({ ok: true }), {
+        return new Response(JSON.stringify({ ok: true, token: await guestToken() }), {
           status: 200,
           headers: {
             "Content-Type": "application/json",

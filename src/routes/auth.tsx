@@ -43,7 +43,9 @@ function AuthPage() {
         body: JSON.stringify({ code }),
       });
       if (!res.ok) throw new Error(await res.text());
+      const { token } = (await res.json()) as { token: string };
       localStorage.setItem("cm_guest", "1");
+      localStorage.setItem("cm_guest_token", token);
       toast.success("Code accepted — you're in.");
       navigate({ to: "/chat" });
     } catch (err) {
@@ -66,7 +68,7 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/chat" },
+          options: { emailRedirectTo: window.location.origin + "/auth" },
         });
         if (error) throw error;
         if (data.session) {

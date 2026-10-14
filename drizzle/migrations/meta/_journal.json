@@ -8,6 +8,13 @@
       "when": 1789803224528,
       "tag": "0000_create_conversations_and_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791980726448,
+      "tag": "0001_guest_devices",
+      "breakpoints": true
     }
   ]
 }

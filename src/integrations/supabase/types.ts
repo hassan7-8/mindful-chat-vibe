@@ -38,6 +38,51 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_devices: {
+        Row: {
+          city: string | null
+          country: string | null
+          device_id: string
+          first_seen: string
+          id: string
+          ip: string | null
+          isp: string | null
+          last_seen: string
+          region: string | null
+          revoked: boolean
+          user_agent: string | null
+          uses: number
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          device_id: string
+          first_seen?: string
+          id?: string
+          ip?: string | null
+          isp?: string | null
+          last_seen?: string
+          region?: string | null
+          revoked?: boolean
+          user_agent?: string | null
+          uses?: number
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          device_id?: string
+          first_seen?: string
+          id?: string
+          ip?: string | null
+          isp?: string | null
+          last_seen?: string
+          region?: string | null
+          revoked?: boolean
+          user_agent?: string | null
+          uses?: number
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string

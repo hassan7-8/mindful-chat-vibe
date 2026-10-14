@@ -96,7 +96,7 @@ function ChatPage() {
   const { listening, start } = useSpeech();
 
   useEffect(() => {
-    setGuest(localStorage.getItem("cm_guest") === "1");
+    setGuest(!!localStorage.getItem("cm_guest_token"));
     setReady(true);
   }, []);
 
@@ -176,7 +176,7 @@ function ChatPage() {
   }
 
   async function leave() {
-    localStorage.removeItem("cm_guest");
+    localStorage.removeItem("cm_guest"); localStorage.removeItem("cm_guest_token");
     if (user) await signOut();
     navigate({ to: "/auth" });
   }

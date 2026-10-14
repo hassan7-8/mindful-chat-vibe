@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
+import { getDeviceId } from "@/lib/device";
 
 const TITLE = "Log in or sign up — Cheap Mind AI";
 const DESC = "Create a free Cheap Mind AI account in seconds and start chatting instantly.";
@@ -40,7 +41,7 @@ function AuthPage() {
       const res = await fetch("/api/guest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, deviceId: getDeviceId() }),
       });
       if (!res.ok) throw new Error(await res.text());
       const { token } = (await res.json()) as { token: string };

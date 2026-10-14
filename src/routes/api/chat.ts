@@ -12,6 +12,7 @@ const BodySchema = z.object({
     )
     .min(1)
     .max(60),
+  model: z.enum(["fast", "smart", "pro"]).optional(),
 });
 
 async function verifyUser(request: Request) {
@@ -53,7 +54,7 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Invalid request.", { status: 400 });
         }
 
-        const { getProviderConfig, SYSTEM_PROMPT } = await import("@/lib/ai-config.server");
+        const { getProviderConfig, SYSTEM_PROMPT, CHAT_MODELS } = await import("@/lib/ai-config.server");
         const cfg = getProviderConfig();
         if (!cfg.configured) {
           return new Response(
@@ -62,7 +63,8 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
-        const models = [cfg.model, "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"].filter(
+        const picked = CHAT_MODELS[body.model ?? "smart"].model;
+        const models = [picked, cfg.model, "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"].filter(
           (m, i, a) => a.indexOf(m) === i,
         );
         let upstream: Response | undefined;
